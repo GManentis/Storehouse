@@ -4,14 +4,10 @@ if($_POST["page"] != "" && $_POST["type"] != "" && $_POST["brand"] != "")
 	$sType = $_POST["type"];
 	$sBrand = $_POST["brand"];
 
-	$hostname_DB = "127.0.0.1";
-	$database_DB = "storehouse";
-	$username_DB = "root";
-	$password_DB = "";
-
 	try 
 	{
-		$CONNPDO = new PDO("mysql:host=".$hostname_DB.";dbname=".$database_DB.";charset=UTF8", $username_DB, $password_DB, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_TIMEOUT => 3));	
+		$CONNPDO = new PDO("sqlite:../litehouse.db");
+		$CONNPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	
 	} 
 	catch (PDOException $e) 
 	{
@@ -37,9 +33,9 @@ if($_POST["page"] != "" && $_POST["type"] != "" && $_POST["brand"] != "")
 		$response = "<table class='table table-striped'><tr><th>Type</th><th>Brand</th><th>Weight</th><th>Quantity</th><th>ExpirationDate</td><th>Place</th></tr>";
 		
 		$getdata_PRST = $CONNPDO->prepare("SELECT * FROM storehouse WHERE type = :type AND brand = :brand ORDER BY id  LIMIT :from , 7 ");
-		$getdata_PRST->bindValue(":type", $sType);
-		$getdata_PRST->bindValue(":brand", $sBrand);
-		$getdata_PRST->bindValue(":from", $page, PDO::PARAM_INT);
+		$getdata_PRST->bindValue(":type", $sType, SQLITE3_TEXT);
+		$getdata_PRST->bindValue(":brand", $sBrand, SQLITE3_TEXT);
+		$getdata_PRST->bindValue(":from", $page, SQLITE3_INTEGER);
 		$getdata_PRST->execute() or die($CONNPDO->errorInfo());
 		while($getdata_RSLT = $getdata_PRST->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
 		{
@@ -69,8 +65,8 @@ if($_POST["page"] != "" && $_POST["type"] != "" && $_POST["brand"] != "")
 		$response .= "</table>" ; 
 		
 		$getdata_PRST = $CONNPDO->prepare("SELECT COUNT(id) AS Number FROM storehouse WHERE type = :type AND brand = :brand   ");
-		$getdata_PRST->bindValue(":type", $sType);
-		$getdata_PRST->bindValue(":brand", $sBrand);
+		$getdata_PRST->bindValue(":type", $sType, SQLITE3_TEXT);
+		$getdata_PRST->bindValue(":brand", $sBrand, SQLITE3_TEXT);
 		$getdata_PRST->execute() or die($CONNPDO->errorInfo());
 		while($getdata_RSLT = $getdata_PRST->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
 		{
@@ -117,17 +113,15 @@ if($_POST["page"] != "" && $_POST["type"] != "" && $_POST["brand"] != "")
 }
 elseif($_POST["page"] != "" && $_POST["type"] == "" && $_POST["brand"] != "")
 {
+	
 	$sBrand = $_POST["brand"];
-
-	$hostname_DB = "127.0.0.1";
-	$database_DB = "storehouse";
-	$username_DB = "root";
-	$password_DB = "";
-
+	
 	try 
 	{
-		$CONNPDO = new PDO("mysql:host=".$hostname_DB.";dbname=".$database_DB.";charset=UTF8", $username_DB, $password_DB, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_TIMEOUT => 3));	
-	} 
+		$CONNPDO = new PDO("sqlite:../litehouse.db");
+		$CONNPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	
+		
+	}
 	catch (PDOException $e) 
 	{
 		$CONNPDO = null;
@@ -152,8 +146,8 @@ elseif($_POST["page"] != "" && $_POST["type"] == "" && $_POST["brand"] != "")
 		$response = "<table class='table table-striped'><tr><th>Type</th><th>Brand</th><th>Weight</th><th>Quantity</th><th>ExpirationDate</td><th>Place</th></tr>";
 		
 		$getdata_PRST = $CONNPDO->prepare("SELECT * FROM storehouse WHERE  brand = :brand ORDER BY id  LIMIT :from , 7 ");
-		$getdata_PRST->bindValue(":brand", $sBrand);
-		$getdata_PRST->bindValue(":from", $page, PDO::PARAM_INT);
+		$getdata_PRST->bindValue(":brand", $sBrand, SQLITE3_TEXT);
+		$getdata_PRST->bindValue(":from", $page, SQLITE3_INTEGER);
 		$getdata_PRST->execute() or die($CONNPDO->errorInfo());
 		while($getdata_RSLT = $getdata_PRST->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
 		{
@@ -182,7 +176,7 @@ elseif($_POST["page"] != "" && $_POST["type"] == "" && $_POST["brand"] != "")
 		$response .= "</table>" ; 
 		
 		$getdata_PRST = $CONNPDO->prepare("SELECT COUNT(id) AS Number FROM storehouse WHERE brand = :brand   ");
-		$getdata_PRST->bindValue(":brand", $sBrand);
+		$getdata_PRST->bindValue(":brand", $sBrand, SQLITE3_TEXT);
 		$getdata_PRST->execute() or die($CONNPDO->errorInfo());
 		while($getdata_RSLT = $getdata_PRST->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
 		{
@@ -231,14 +225,12 @@ elseif($_POST["page"] != "" && $_POST["type"] != "" && $_POST["brand"] == "")
 {
 	$sType = $_POST["type"];
 
-	$hostname_DB = "127.0.0.1";
-	$database_DB = "storehouse";
-	$username_DB = "root";
-	$password_DB = "";
+	
 
 	try 
 	{
-		$CONNPDO = new PDO("mysql:host=".$hostname_DB.";dbname=".$database_DB.";charset=UTF8", $username_DB, $password_DB, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_TIMEOUT => 3));	
+		$CONNPDO = new PDO("sqlite:../litehouse.db");
+		$CONNPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	} 
 	catch (PDOException $e) 
 	{
@@ -256,7 +248,7 @@ elseif($_POST["page"] != "" && $_POST["type"] != "" && $_POST["brand"] == "")
 		{
 			
 		(int)$page = ($page*7 - 7) ;
-			
+		//last paer	
 		}
 		
 		(int)$to = 7 ; 
@@ -264,8 +256,8 @@ elseif($_POST["page"] != "" && $_POST["type"] != "" && $_POST["brand"] == "")
 		$response = "<table class='table table-striped'><tr><th>Type</th><th>Brand</th><th>Weight</th><th>Quantity</th><th>ExpirationDate</td><th>Place</th></tr>";
 		
 		$getdata_PRST = $CONNPDO->prepare("SELECT * FROM storehouse WHERE type = :type ORDER BY id  LIMIT :from , 7 ");
-		$getdata_PRST->bindValue(":type", $sType);
-		$getdata_PRST->bindValue(":from", $page, PDO::PARAM_INT);
+		$getdata_PRST->bindValue(":type", $sType, SQLITE3_TEXT);
+		$getdata_PRST->bindValue(":from", $page, SQLITE3_INTEGER);
 		$getdata_PRST->execute() or die($CONNPDO->errorInfo());
 		while($getdata_RSLT = $getdata_PRST->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
 		{
@@ -296,7 +288,7 @@ elseif($_POST["page"] != "" && $_POST["type"] != "" && $_POST["brand"] == "")
 		$response .= "</table>" ; 
 		
 		$getdata_PRST = $CONNPDO->prepare("SELECT COUNT(id) AS Number FROM storehouse WHERE type = :type   ");
-		$getdata_PRST->bindValue(":type", $sType);
+		$getdata_PRST->bindValue(":type", $sType,SQLITE3_TEXT);
 		$getdata_PRST->execute() or die($CONNPDO->errorInfo());
 		while($getdata_RSLT = $getdata_PRST->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
 		{
@@ -343,14 +335,11 @@ elseif($_POST["page"] != "" && $_POST["type"] != "" && $_POST["brand"] == "")
 }
 else
 {
-	$hostname_DB = "127.0.0.1";
-	$database_DB = "storehouse";
-	$username_DB = "root";
-	$password_DB = "";
 
 	try 
 	{
-		$CONNPDO = new PDO("mysql:host=".$hostname_DB.";dbname=".$database_DB.";charset=UTF8", $username_DB, $password_DB, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_TIMEOUT => 3));	
+		$CONNPDO = new PDO("sqlite:../litehouse.db");
+		$CONNPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	
 	} 
 	catch (PDOException $e) 
 	{
@@ -376,7 +365,7 @@ else
 		$response = "<table class='table table-striped'><tr><th>Type</th><th>Brand</th><th>Weight</th><th>Quantity</th><th>ExpirationDate</td><th>Place</th></tr>";
 		
 		$getdata_PRST = $CONNPDO->prepare("SELECT * FROM storehouse ORDER BY id  LIMIT :from , 7 ");
-		$getdata_PRST->bindValue(":from", $page, PDO::PARAM_INT);
+		$getdata_PRST->bindValue(":from", $page, SQLITE3_INTEGER);
 		$getdata_PRST->execute() or die($CONNPDO->errorInfo());
 		while($getdata_RSLT = $getdata_PRST->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT))
 		{
